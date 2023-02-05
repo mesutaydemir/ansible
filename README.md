@@ -70,7 +70,7 @@ resolvelib==0.8.1
 nano hosts
 ```
 ```
-host0 #0d1117 ansible_host=192.168.56.20
+host0 `#0d1117 cc` ansible_host=192.168.56.20
 host1 ansible_host=192.168.56.21
 host2 ansible_host=192.168.56.22
 
