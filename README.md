@@ -247,7 +247,7 @@ all:
         three.example.com:
 ```
 
-# YAML [https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html] .yaml dokumanları 3 tire (---) ile başlar 3 nokta ile biter.
+# YAML Syntax ile ilgili dokumantasyona [YAML Syntax](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) adresinden erişilebilir.
 
 # PLAYBOOK
 playbook'u değiştirmeden yalnızca **host2**' de işlem yapmak istiyorsak:
@@ -255,7 +255,7 @@ playbook'u değiştirmeden yalnızca **host2**' de işlem yapmak istiyorsak:
 ansible-playbook nginx.yml --limit "host0,host1"
 ```
 
->İpucu: `git restore nginx.yml` komutu ile git'den clonelanan bir dosyayı ile haline getiriyoruz.
+>`git restore nginx.yml` komutu ile git'den clonelanan bir dosyayı ile haline getiriyoruz.
 
 ## gather_facts'i playbook çalıştırıldığında disable etmek için tags -configuration gather_facts: no
 ```
@@ -272,4 +272,4 @@ ansible-playbook nginx.yml --limit "host0,host1"
       name: nginx
       state: absent
 ```
->İpucu:ssh-keygen -R 192.168.56.20 komutu ile hedef makinedeki ssh-keygen yeniden yapılandırılıyor.
+>`ssh-keygen -R 192.168.56.20` komutu ile hedef makinedeki ssh-keygen yeniden yapılandırılıyor.
