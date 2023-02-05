@@ -212,7 +212,7 @@ atlanta_webservers
 boston_webservers
 ```
 
-## inventory dosyası yaml formatında da olabilir:
+## Inventory dosyası yaml formatında da olabilir:
 ```ruby
 all:
   hosts:
@@ -247,7 +247,7 @@ all:
         three.example.com:
 ```
 
-# YAML Syntax ile ilgili dokumantasyona [YAML Syntax](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) adresinden erişilebilir.
+## YAML Syntax ile ilgili dokumantasyona [YAML Syntax](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) adresinden erişilebilir.
 
 # PLAYBOOK
 playbook'u değiştirmeden yalnızca **host2**' de işlem yapmak istiyorsak:
