@@ -2,7 +2,7 @@
 ## Vagrant Kurulumu
 
 ## Vagrant Komutları
-
+```
 vagrant status
 vagrant box list
 vagrant up
@@ -12,7 +12,7 @@ vagrant ssh ==> Varsayılan olarak kontrol makinesine bağlanır.
 vagrant box --help
 vagrant suspend
 vagrant resume
-
+```
 
 vagrant init ubuntu/focal64 --box-version 20230119.0.0 ==> vagrant makinesini up etmeden önce oluşturulan vagrant dosyası
 
