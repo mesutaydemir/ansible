@@ -14,9 +14,41 @@ vagrant suspend
 vagrant resume
 vagrant init ubuntu/focal64 --box-version 20230119.0.0 ==> vagrant makinesini up etmeden önce oluşturulan vagrant dosyası
 ```
-##Ansible kurulumu
+### Örnek Bir Vagrant Dosyası Aşağıdaki gibidir:
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/focal64"
+  config.vm.box_version = "20230119.0.0"
 
-### Öncelikle yazılım reposunu güncelleyip python3 virtual environment paketini [python3-venv] kurmuyoruz :) çünkü provisioning dosyasında var:
+  config.vm.define "control", primary: true do |control|
+    control.vm.hostname = "control"
+
+    control.vm.network "private_network", ip: "192.168.56.10"
+
+    control.vm.provision "shell", inline: <<-SHELL
+      apt update > /dev/null 2>&1 && apt install -y python3.8-venv sshpass > /dev/null 2>&1
+    SHELL
+  end
+
+  (0..2).each do |i|
+    config.vm.define "host#{i}" do |node|
+      node.vm.hostname = "host#{i}"
+
+      node.vm.network "private_network", ip: "192.168.56.#{i+20}"
+
+      node.vm.provision "shell", inline: <<-SHELL
+        sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config    
+        systemctl restart sshd.service
+      SHELL
+    end
+  end
+end
+```
+
+### Ansible kurulumu
+
+### Öncelikle yazılım reposunu güncelleyip python3 virtual environment paketini *python3-venv* kurmayabiliriz :) çünkü yukarıdaki Vagrant Dosyasında (provisioning file) var:
+
 ```
 sudo apt update
 sudo apt install python3-venv -y
