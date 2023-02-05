@@ -62,19 +62,20 @@ resolvelib==0.8.1
 >Not: Kütüphanelerin versiyonları güvenlik güncellemeleri ve buglardan dolayı ara sıra güncellenerek kontrol edilmeli.
 >pip3 freeze # requirements.txt dosyasındaki kütüphaneleri listelemek için
 
-`pip3 install -r requirements.txt` (declarative)	==> pip3 install ansible yazarak da kurabilirdim (imperative)
+`pip3 install -r requirements.txt` (declarative)	==> `pip3 install ansible` yazarak da kurabilirdim (imperative)
 
 
 # hosts dosyasını oluşturuyoruz. Yöneteceğimiz makineler bunlar demek:
+```
 nano hosts
-
-host0 ansible_host=192.168.56.20
+```
+*host0 ansible_host=192.168.56.20
 host1 ansible_host=192.168.56.21
 host2 ansible_host=192.168.56.22
 
-[all:vars]
+*[all:vars]
 ansible_user=vagrant
-ansible_password=vagrant
+ansible_password=vagrant*
 
 ## ad-hoc komutları ile önce bağlantıyı kontrol edeceğiz:
 
