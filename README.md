@@ -69,13 +69,13 @@ resolvelib==0.8.1
 ```
 nano hosts
 ```
-*host0 ansible_host=192.168.56.20
+host0 ansible_host=192.168.56.2 `#0969DA`
 host1 ansible_host=192.168.56.21
 host2 ansible_host=192.168.56.22
 
-*[all:vars]
+[all:vars]
 ansible_user=vagrant
-ansible_password=vagrant*
+ansible_password=vagrant `#0969DA`
 
 ## ad-hoc komutları ile önce bağlantıyı kontrol edeceğiz:
 
