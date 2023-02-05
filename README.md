@@ -1,4 +1,6 @@
-## $\textcolor{yellow}{This\ is\ a\ Big\ Title}$
+```
+$\textcolor{blue}{This\ is\ a\ Big\ Title}$
+```
 # Ansible Notları
 ## Vagrant Kurulumu
 
