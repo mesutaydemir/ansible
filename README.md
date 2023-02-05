@@ -264,9 +264,9 @@ ansible-playbook nginx.yml --limit "host0,host1"
 - name: Remove nginx
   hosts: all
   become: True
-  tags:
+  **tags:
     - configuration
-  gather_facts: no
+  gather_facts: no**
   tasks:
   - name: Remove nginx package
     apt:
