@@ -44,6 +44,7 @@ pip3 install --upgrade pip # pip3 paketini güncelliyoruz.
 ```
 nano requirements.txt
 ```
+##### Dosyanın içine aşağıdaki satrıları ekledikten sonra kaydedip çıkıyoruz:
 ```ruby
 ansible==6.7.0
 ansible-core==2.13.7
@@ -57,7 +58,7 @@ pycparser==2.21
 PyYAML==6.0
 resolvelib==0.8.1
 ```
-### Aşağıdaki komutlar ile önce pip'i upgrade ediyoruz. Sonra requirements.txt içinde belirtilen python kütüphanelerini (versiyonlarında belirtildiği şekilde) güncelliyoruz. 
+### Aşağıdaki komutlar ile önce pip'i upgrade ediyoruz. Sonra *requirements.txt* içinde belirtilen python kütüphanelerini (versiyonlarında belirtildiği şekilde) güncelliyoruz. 
 
 >Not: Kütüphanelerin versiyonları güvenlik güncellemeleri ve buglardan dolayı ara sıra güncellenerek kontrol edilmeli.
 
@@ -72,7 +73,7 @@ resolvelib==0.8.1
 nano hosts
 ```
 ### Oluşturduğumuz host dosyasının içeriği aşağıdaki gibi:
-```
+```ruby
 host0 ansible_host=192.168.56.20
 host1 ansible_host=192.168.56.21
 host2 ansible_host=192.168.56.22
