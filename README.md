@@ -63,7 +63,8 @@ resolvelib==0.8.1
 
 `pip3 freeze` requirements.txt dosyasındaki kütüphaneleri listelemek için
 
-`pip3 install -r requirements.txt` (declarative) ==> `pip3 install ansible` yazarak da kurabilirdim (imperative)
+`pip3 install -r requirements.txt` **declarative**
+`pip3 install ansible` yazarak da kurabilirdim **imperative**
 
 
 ### hosts dosyasını oluşturuyoruz. Yöneteceğimiz makineler bunlar demek:
@@ -72,7 +73,7 @@ nano hosts
 ```
 ### Oluşturduğumuz host dosyasının içeriği aşağıdaki gibi:
 ```
-host0 `#0d1117 cc` ansible_host=192.168.56.20
+host0 ansible_host=192.168.56.20
 host1 ansible_host=192.168.56.21
 host2 ansible_host=192.168.56.22
 
@@ -80,7 +81,7 @@ host2 ansible_host=192.168.56.22
 ansible_user=vagrant
 ansible_password=vagrant
 ```
-### ad-hoc komutları ile önce bağlantıyı kontrol edeceğiz:
+### Ad-hoc komutları ile önce bağlantıyı kontrol edeceğiz:
 
 Kontrol makinesinde yönetilen makinelere bağlantı yapılabildiğini doğrulayalım:
 
@@ -99,7 +100,7 @@ aşağıdaki komutu çalıştırabiliriz:
 ansible all -i hosts -m ping 
 ```
 
-### yanlış yazılan komutlarda rc ye bakıp 0 dışında bir değer ise failed dönüyor. Komut değişikliğe neden olan bir komut olmasa bile bizim ne yaptığımızı bilmediği için *CHANGED* yazar.
+### Yanlış yazılan komutlarda rc ye bakıp 0 dışında bir değer ise failed dönüyor. Komut değişikliğe neden olan bir komut olmasa bile bizim ne yaptığımızı bilmediği için *CHANGED* yazar.
 ```
 (kamp) vagrant@control:~$ ansible all -i hosts -a "asds"
 host2 | FAILED | rc=2 >>
@@ -114,7 +115,7 @@ host1 | FAILED | rc=2 >>
 ```
 ansible host0 -i hosts -m service -a "name=sshd state=started"
 ```
-##### Komutun çıktısı aşağıdaki gibi olacaktır:
+#### Komutun çıktısı aşağıdaki gibi olacaktır:
 ```
 host0 | SUCCESS => {
 ```
@@ -146,46 +147,57 @@ ansible host0 -a "uptime"
 ansible-doc [modül adı]
 ansible-doc service
 ```
-##### Aşağıda bazı modüllerin kullanım örnekleri verilmektedir:
+#### Aşağıda bazı modüllerin kullanım örnekleri verilmektedir:
 ```
 ansible host0 -m shell -a "systemctl status sshd | grep running"
 ansible all -m shell -a "systemctl status sshd | grep running"
 ansible host0 -m shell -a "lsb_release -a"
-ansible all -m shell -b -a "reboot" [Tüm makineri reboot et. -b: become sudo sudo kullanmasak iyi olur çünkü parola soracaktır. onun yerine -b ile become sudo]. Gerekmeyen hiçbir parametre kullanılmamalı. Örneğin bazı komutlar sudo yetkisi gerektirmiyorsa -b ye egrek yok.
-ansible all -m service -b  -a "name=sshd state=restarted" # service kullanılarak yapılan bir cli işlemi
+```
+#### Tüm makineri reboot et. *-b: become sudo* kullanmasak iyi olur çünkü parola soracaktır. onun yerine *-b* ile *become sudo*]. Gerekmeyen hiçbir parametre kullanılmamalı. Örneğin bazı komutlar sudo yetkisi gerektirmiyorsa *-b* ye gerek yok.
+```
+ansible all -m shell -b -a "reboot" [
+ansible all -m service -b  -a "name=sshd state=restarted"
 ansible all -m shell -b -a "shutdown -h now"
 ansible host0 -m setup | less
-ansible all -m copy -a "src=/etc/hosts dest=/tmp/hosts mode=600 owner=ubuntu group=ubuntu" #kullanıcı adı ubuntu ve grubu ubuntu olan kullanıcı ve grub için 600 erişim hakkı verilmesi için
+```
+#### Kullanıcı adı ubuntu ve grubu ubuntu olan kullanıcı ve grub için 600 erişim hakkı verilmesi için
+```
+ansible all -m copy -a "src=/etc/hosts dest=/tmp/hosts mode=600 owner=ubuntu group=ubuntu" 
 ```
 
-## Idempotency
-bir kere çalıştırılıp elde edilen çıktı sonrasında aynı komut çalıştırıldığında alınan hata. örneğin mkdir.
 
-## CLI'den help dokumanını görüntülemek için:
-ansible-doc [paket_adı]
-ansible-doc apt
-
-
-## apt ile host2'ye ansible'da shell dışında bir modül kullanarak apache2'yi kuralım.
-ansible host2 -b -m apt -a "name=apache2 state=present update_cache=yes" # varolan en güncel sürüm
-ansible host2 -b -m service -a "name=apache2 state=started" # servisin çalışıp çalışmadığını kontrol etmek ve durmuşsa başlatacak. 
-ansible host2 -b -m apt -a "name=apache2 state=latest update_cache=yes" # yeni versiyon geldiğinde present var mı yok muyu kontrol eder. latest'ta ise güncel sürüm var mı kontrole der ve kurar.
+#### apt ile host2'ye ansible'da shell dışında bir modül kullanarak apache2'yi kuralım. Varolan en güncel sürümü kurmak için *state=present* ya da *state=latest* kullanılabilir:
+```
+ansible host2 -b -m apt -a "name=apache2 state=present update_cache=yes" 
+```
+#### Servisin çalışıp çalışmadığını kontrol etmek ve durmuşsa başlatmak için *state=started* komutu kullanılabilir:
+```
+ansible host2 -b -m service -a "name=apache2 state=started"  
+```
+#### Yeni versiyon geldiğinde *present* var mı yok muyu kontrol eder. *latest* ise güncel sürüm var mı kontrol eder ve kurar:
+```
+ansible host2 -b -m apt -a "name=apache2 state=latest update_cache=yes" 
 ansible host2 -b -m apt -a "name=apache2=2.4.41-4ubuntu3.13 state=latest update_cache=yes" 
-## Versiyon downgrade etmek istiyorsak hata verecektir. downgrade için parametre vermek gerekiyor. Bunu araştır!
-apt-cache madison apache2 # apache2 paketinin repodaki mevcut sürümlerini gösterir.
+```
+#### Versiyon downgrade etmek istiyorsak hata verecektir. Downgrade için -allow_downgrade seçeneği kullanılacak. Bununla ilgili localde testler yapılabilir.
+```
 ansible host2 -b -m apt -a "name=apache2=2.4.41-4ubuntu3.13 state=latest update_cache=yes" 
-
-# Paket kaldırmak için:
-[remove] ansible host2 -b -m apt -a "name=apache2=2.4.41-4ubuntu3.13 state=absent"
-[purge] ansible host2 -b -m apt -a "name=apache2=2.4.41-4ubuntu3.13 state=absent purge=yes" # "yes" alternatives: "true";"on"
-
-## Nginx kurulumu
+```
+#### apache2 paketinin repodaki mevcut sürümlerini görmek için aşağıdaki komut kullanılabilir:
+```
+apt-cache madison apache2
+```
+#### Paket kaldırmak için:
+```
+ansible host2 -b -m apt -a "name=apache2=2.4.41-4ubuntu3.13 state=absent"
+ansible host2 -b -m apt -a "name=apache2=2.4.41-4ubuntu3.13 state=absent purge=yes"
+```
+## Nginx kurulumu için aşağıdaki komut kullanılabilir:
+```
 ansible host2 -b -m apt -a "name=nginx state=latest update_cache=yes"
 ansible host2 -b -m service -a "name=nginx state=started" # servisin çalışıp çalışmadığını kontrol etmek ve durmuşsa başlatacak. 
+```
 
-## downgrade için -allow_downgrade seçeneği kullanılacak. Bununla ilgili localde testler yapılabilir.
-
-================================================================================================================
 # INVENTORY
 ## /home/mesut/Desktop/ansible/inventory-main/hosts dosyasındaki örnek dosyayı incele!
 - Geçerli bir fqdn verilirse ansible_host tanımlaması yapılmaya gerek kalmayabilir.
@@ -197,6 +209,7 @@ ansible host2 -b -m service -a "name=nginx state=started" # servisin çalışıp
 	boston_webservers
 
 ## inventory dosyası yaml formatında da olabilir:
+```ruby
 all:
   hosts:
     mail.example.com:
@@ -228,7 +241,7 @@ all:
       hosts:
         bar.example.com:
         three.example.com:
-
+```
 
 ===============================================================================================================
 YAML [https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html]
