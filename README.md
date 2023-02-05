@@ -44,7 +44,7 @@ pip3 install --upgrade pip # pip3 paketini güncelliyoruz.
 ```
 nano requirements.txt
 ```
-```
+```ruby
 ansible==6.7.0
 ansible-core==2.13.7
 cffi==1.15.1
@@ -103,6 +103,8 @@ ansible all -i hosts -m ping
 ### Yanlış yazılan komutlarda rc ye bakıp 0 dışında bir değer ise failed dönüyor. Komut değişikliğe neden olan bir komut olmasa bile bizim ne yaptığımızı bilmediği için *CHANGED* yazar.
 ```
 (kamp) vagrant@control:~$ ansible all -i hosts -a "asds"
+```
+```ruby
 host2 | FAILED | rc=2 >>
 [Errno 2] No such file or directory: b'asds'
 host0 | FAILED | rc=2 >>
@@ -203,10 +205,12 @@ ansible host2 -b -m service -a "name=nginx state=started" # servisin çalışıp
 - Geçerli bir fqdn verilirse ansible_host tanımlaması yapılmaya gerek kalmayabilir.
 - ansible_port belirtilerek default portlar dışında da portlar kullanılabilir: (örneğin ansible_port=5555)
 - parent children ilişkisi ile aynı türden fakat farklı kategorideki sunucular için ortak işlemler gerçekleştirilebilir:
-	# webservers in all geos
-	[webservers:children]
-	atlanta_webservers
-	boston_webservers
+```ruby
+#webservers in all geos
+[webservers:children]
+atlanta_webservers
+boston_webservers
+```
 
 ## inventory dosyası yaml formatında da olabilir:
 ```ruby
@@ -243,19 +247,18 @@ all:
         three.example.com:
 ```
 
-===============================================================================================================
-YAML [https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html]
-.yaml dokumanları 3 tire (---) ile başlar 3 nokta ile biter.
+# YAML [https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html] .yaml dokumanları 3 tire (---) ile başlar 3 nokta ile biter.
 
-===============================================================================================================
 # PLAYBOOK
-playbook'u değiştirmeden yalnızca host2'de işlem yapmak istiyorsak:
+playbook'u değiştirmeden yalnızca **host2**' de işlem yapmak istiyorsak:
+```
 ansible-playbook nginx.yml --limit "host0,host1"
+```
 
-git restore nginx.yml komutu ile git'den clonelanan bir dosyayı ile haline getiriyoruz.
+>İpucu: `git restore nginx.yml` komutu ile git'den clonelanan bir dosyayı ile haline getiriyoruz.
 
-# gather_facts'i playbook çalıştırıldığında disable etmek için tags -configuration gather_facts: no
-
+## gather_facts'i playbook çalıştırıldığında disable etmek için tags -configuration gather_facts: no
+```
 ---
 - name: Remove nginx
   hosts: all
@@ -268,5 +271,5 @@ git restore nginx.yml komutu ile git'den clonelanan bir dosyayı ile haline geti
     apt:
       name: nginx
       state: absent
-
-ssh-keygen -R 192.168.56.20 komutu ile hedef makinedeki ssh-keygen yeniden yapılandırılıyor.
+```
+>İpucu:ssh-keygen -R 192.168.56.20 komutu ile hedef makinedeki ssh-keygen yeniden yapılandırılıyor.
