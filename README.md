@@ -1,9 +1,5 @@
-```diff
-- text in red
-+ text in green
-! text in orange
+```
 # text in gray
-@@ text in purple@@
 ```
 # Ansible Notları
 ## Vagrant Kurulumu
