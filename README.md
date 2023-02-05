@@ -1,6 +1,3 @@
-```
-# text in gray
-```
 # Ansible Notları
 ## Vagrant Kurulumu
 
@@ -63,15 +60,17 @@ resolvelib==0.8.1
 ### Aşağıdaki komutlar ile önce pip'i upgrade ediyoruz. Sonra requirements.txt içinde belirtilen python kütüphanelerini (versiyonlarında belirtildiği şekilde) güncelliyoruz. 
 
 >Not: Kütüphanelerin versiyonları güvenlik güncellemeleri ve buglardan dolayı ara sıra güncellenerek kontrol edilmeli.
->pip3 freeze # requirements.txt dosyasındaki kütüphaneleri listelemek için
 
-`pip3 install -r requirements.txt` (declarative)	==> `pip3 install ansible` yazarak da kurabilirdim (imperative)
+`pip3 freeze` requirements.txt dosyasındaki kütüphaneleri listelemek için
+
+`pip3 install -r requirements.txt` (declarative) ==> `pip3 install ansible` yazarak da kurabilirdim (imperative)
 
 
-# hosts dosyasını oluşturuyoruz. Yöneteceğimiz makineler bunlar demek:
+### hosts dosyasını oluşturuyoruz. Yöneteceğimiz makineler bunlar demek:
 ```
 nano hosts
 ```
+### Oluşturduğumuz host dosyasının içeriği aşağıdaki gibi:
 ```
 host0 `#0d1117 cc` ansible_host=192.168.56.20
 host1 ansible_host=192.168.56.21
@@ -81,25 +80,27 @@ host2 ansible_host=192.168.56.22
 ansible_user=vagrant
 ansible_password=vagrant
 ```
-## ad-hoc komutları ile önce bağlantıyı kontrol edeceğiz:
+### ad-hoc komutları ile önce bağlantıyı kontrol edeceğiz:
 
 Kontrol makinesinde yönetilen makinelere bağlantı yapılabildiğini doğrulayalım:
 
+```
 ansible all -i hosts -m ping --ssh-common-args='-o StrictHostKeyChecking=no'
+```
 
-Alternatif olarak bu klasörde ansible.cfg dosyasını oluşturup aşağıdaki satırları ekledikten sonra:
-
+Alternatif olarak bu klasörde *ansible.cfg* dosyasını oluşturup aşağıdaki satırları ekledikten sonra:
+```
 [defaults]
 host_key_checking = False
 inventory=hosts
-
+```
+aşağıdaki komutu çalıştırabiliriz:
+```
 ansible all -i hosts -m ping 
+```
 
-komutunu çalıştırabiliriz.
-
-
-# yanlış yazılan komutlarda rc ye bakıp 0 dışında bir değer ise failed dönüyor. Komut değişikliğe neden olan bir komut olmasa bile bizim ne yaptığımızı bilmediği için
-CHANGED yazar.
+### yanlış yazılan komutlarda rc ye bakıp 0 dışında bir değer ise failed dönüyor. Komut değişikliğe neden olan bir komut olmasa bile bizim ne yaptığımızı bilmediği için *CHANGED* yazar.
+```
 (kamp) vagrant@control:~$ ansible all -i hosts -a "asds"
 host2 | FAILED | rc=2 >>
 [Errno 2] No such file or directory: b'asds'
@@ -107,29 +108,46 @@ host0 | FAILED | rc=2 >>
 [Errno 2] No such file or directory: b'asds'
 host1 | FAILED | rc=2 >>
 [Errno 2] No such file or directory: b'asds'
+```
 
+#### Servis modülü ile sshd servisinin çalışıp çalışmadığını görmek için aşaıdaki komut kullanılabilir:
+```
 ansible host0 -i hosts -m service -a "name=sshd state=started"
-	host0 | SUCCESS => {
+```
+##### Komutun çıktısı aşağıdaki gibi olacaktır:
+```
+host0 | SUCCESS => {
+```
 
-
-## Bazı tek seferlik işlemler için playbook yazıp bunu çalıştırmak anlamsız olabilir. örneğin makinelerin kullandıkları ram miktarını öğrenebiliriz:
-
+### Bazı tek seferlik işlemler için playbook yazıp bunu çalıştırmak anlamsız olabilir. örneğin makinelerin kullandıkları ram miktarını öğrenebiliriz:
+```
 ansible all -a "free -m"
-
+```
 ya da disk boyutu
-
+```
 ansible all -a "df -h /"
-
+```
 ## host00 ve host01'in kullandığı ram miktarını kontrol etmek için
+```
 ansible 'all:host0,host1' -a "df -h /"
-ansible 'all:!host2' -i hosts -a "ls" #host2 dışındaki tüm makineler. Sunucu kategorisi de kullanılmışsa [databsase] all yerine bu kategori isimleri ile de işlem yapılabilir.
+```
+#### host2 dışındaki tüm makinelerde *ls* komutunu çalıştırmak için aşağıdaki komut kullanılabilir. Sunucu kategorisi de kullanılmışsa [databsase] all yerine bu kategori isimleri ile de işlem yapılabilir.
+```
+ansible 'all:!host2' -i hosts -a "ls" #
+```
 
-## makine ne kadar ayakta
+#### makine ne kadar zamandır çalışır durumda olduğunu görmek için aşağıdaki komut kullanılabilir:
+```
 ansible host0 -a "uptime"
+```
 
-## -m parametresi ile modül çağırıp ad-hoc komutlarda bunları kullanabiliriz. Bir işlemin modülü varsa shell script yerine modül ile işlem gerçekleştirilme tercih edilmeli.
+#### -m parametresi ile modül çağırıp ad-hoc komutlarda bunları kullanabiliriz. Bir işlemin modülü varsa shell script yerine modül ile işlem gerçekleştirilme tercih edilmeli. Kullanılmak istenen modülün dokumantasyonuna aşağıdaki komutla ulaşılabilir:
+```
 ansible-doc [modül adı]
 ansible-doc service
+```
+##### Aşağıda bazı modüllerin kullanım örnekleri verilmektedir:
+```
 ansible host0 -m shell -a "systemctl status sshd | grep running"
 ansible all -m shell -a "systemctl status sshd | grep running"
 ansible host0 -m shell -a "lsb_release -a"
@@ -138,7 +156,7 @@ ansible all -m service -b  -a "name=sshd state=restarted" # service kullanılara
 ansible all -m shell -b -a "shutdown -h now"
 ansible host0 -m setup | less
 ansible all -m copy -a "src=/etc/hosts dest=/tmp/hosts mode=600 owner=ubuntu group=ubuntu" #kullanıcı adı ubuntu ve grubu ubuntu olan kullanıcı ve grub için 600 erişim hakkı verilmesi için
-
+```
 
 ## Idempotency
 bir kere çalıştırılıp elde edilen çıktı sonrasında aynı komut çalıştırıldığında alınan hata. örneğin mkdir.
