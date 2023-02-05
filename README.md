@@ -258,15 +258,31 @@ ansible-playbook nginx.yml --limit "host0,host1"
 
 >`git restore nginx.yml` komutu ile git'den clonelanan bir dosyayı ile haline getiriyoruz.
 
-## gather_facts'i playbook çalıştırıldığında disable etmek için tags -configuration gather_facts: no
+#### Nginx'i kurmak için kullanılacak nginx.yml playbook dosyasının içi aşağıdaki gibidir:
+```ruby
+---
+- name: Install nginx
+  hosts: all
+  become: True
+  tags:
+    - configuration
+  gather_facts: no
+  tasks:
+  - name: Install nginx package
+    apt:
+      name: nginx
+      update_cache: True
+```
+> gather_facts'i playbook çalıştırıldığında disable etmek için tags -configuration gather_facts: no
+#### Nginx'i kaldırmak için kullanılacak nginx.yml playbook dosyasının içi aşağıdaki gibidir:
 ```ruby
 ---
 - name: Remove nginx
   hosts: all
   become: True
-  **tags:
+  tags:
     - configuration
-  gather_facts: no**
+  gather_facts: no
   tasks:
   - name: Remove nginx package
     apt:
