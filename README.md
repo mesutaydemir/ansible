@@ -12,54 +12,57 @@ vagrant ssh ==> Varsayılan olarak kontrol makinesine bağlanır.
 vagrant box --help
 vagrant suspend
 vagrant resume
-```
-
 vagrant init ubuntu/focal64 --box-version 20230119.0.0 ==> vagrant makinesini up etmeden önce oluşturulan vagrant dosyası
+```
+##Ansible kurulumu
 
-=============================================================
-Ansible kurulumu
-=============================================================
-
-# Öncelikle yazılım reposunu güncelleyip python3 virtual environment paketini [python3-venv] kurmuyoruz :) çünkü provisioning dosyasında var:
+### Öncelikle yazılım reposunu güncelleyip python3 virtual environment paketini [python3-venv] kurmuyoruz :) çünkü provisioning dosyasında var:
+```
 sudo apt update
 sudo apt install python3-venv -y
+```
 
 Ev dizinimizin altında merkezi bir dosya altında yapılandırma dosyalarını oluşturuyoruz:
+```
 python3 -m venv ~/.venv/kamp
-
-## Bu komutu etkinleştirmek için:
+```
+python3'ün path'ini belirtmek için aşağıdaki komutu çalıştırıyoruz:
+```
 source ~/.venv/kamp/bin/activate
-echo $PATH
-/home/vagrant/.venv/kamp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+```
 
-## Bu komutu etkisizleştirmek için: 
+Bu komutu etkisizleştirmek için: 
+```
 deactivate
-
-which python3 komutu ile /usr/bin/python3 görecektir. source ~/.venv/kamp/bin/activate komutundan sonra venv altındaki python3 
+```
+`which python3` komutu ile */usr/bin/python3* görülecektir. `source ~/.venv/kamp/bin/activate` komutundan sonra *venv* altındaki python3 
+```
 pip3 install --upgrade pip # pip3 paketini güncelliyoruz.
-
-# Dependancy management (pythonda kullanılacak kütüphaneleri indiriyoruz)
-## requirements.txt dosyasını /home/vagrant altında oluşturuyoruz:
+```
+### Dependancy management (pythonda kullanılacak kütüphaneleri indiriyoruz)
+#### requirements.txt dosyasını /home/vagrant altında oluşturuyoruz:
+```
 nano requirements.txt
+```
+```
+ansible==6.7.0
+ansible-core==2.13.7
+cffi==1.15.1
+cryptography==39.0.0
+Jinja2==3.1.2
+MarkupSafe==2.1.2
+packaging==23.0
+pkg_resources==0.0.0
+pycparser==2.21
+PyYAML==6.0
+resolvelib==0.8.1
+```
+### Aşağıdaki komutlar ile önce pip'i upgrade ediyoruz. Sonra requirements.txt içinde belirtilen python kütüphanelerini (versiyonlarında belirtildiği şekilde) güncelliyoruz. 
 
-	ansible==6.7.0
-	ansible-core==2.13.7
-	cffi==1.15.1
-	cryptography==39.0.0
-	Jinja2==3.1.2
-	MarkupSafe==2.1.2
-	packaging==23.0
-	pkg_resources==0.0.0
-	pycparser==2.21
-	PyYAML==6.0
-	resolvelib==0.8.1
+>Not: Kütüphanelerin versiyonları güvenlik güncellemeleri ve buglardan dolayı ara sıra güncellenerek kontrol edilmeli.
+>pip3 freeze # requirements.txt dosyasındaki kütüphaneleri listelemek için
 
-## aşağıdaki komutlar ile önce pip'i upgrade ediyoruz. Sonra requirements.txt içinde belirtilen python kütüphanelerini (versiyonlarında belirtildiği şekilde) güncelliyoruz. 
-
-Not: Kütüphanelerin versiyonları güvenlik güncellemeleri ve buglardan dolayı ara sıra güncellenerek kontrol edilmeli.
-pip3 freeze # requirements.txt dosyasındaki kütüphaneleri listelemek için
-
-pip3 install -r requirements.txt (declarative)	==> pip3 install ansible yazarak da kurabilirdim (imperative)
+`pip3 install -r requirements.txt` (declarative)	==> pip3 install ansible yazarak da kurabilirdim (imperative)
 
 
 # hosts dosyasını oluşturuyoruz. Yöneteceğimiz makineler bunlar demek:
