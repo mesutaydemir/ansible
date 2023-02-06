@@ -487,6 +487,40 @@ ok: [host2] => {
     debug:
       var: nginx_result.cache_updated
 ```
+-  çıktı json yerine yaml formatında görmek için *ansible.cfg dosyasına `stdout_callback = yaml` parametresi eklenebilir:
+```ruby
+[defaults]
+host_key_checking = False
+inventory=hosts
+callbacks_enabled = profile_tasks
+stdout_callback = yaml
+```
+- `copy` modülü ile özellikle şablon görevi gören dosyalar *src* ve *dest* ile kaynak ve hedef konumları belirtilerek dosyalar kopyalanır. Ayrıca tasklarda `notify` ile belirtilen ilgili handler altındaki tasklar yapılır. Aşağıdaki örnekte jjna2 {{nginx_conf}} şablon dosyası host makinelerde /etc/nginx/conf.d altına example.com.conf olarak sahibi ve sahibinin grubu root olacak şekilde 644 erişim izni ile kopyalanıyor. Daha sonra notify ile handlers altında belirtilen nginx'i yeniden başlatma task'ı çağrılıyor:
+
+```ruby
+  tasks:
+  - name: Install nginx package
+    apt:
+      name: nginx
+      update_cache: True
+
+  - name: Update nginx configuration
+    copy:
+      content: "{{ nginx_conf }}"
+      dest: /etc/nginx/conf.d/example.com.conf
+      owner: root
+      group: root
+      mode: '0644'
+    notify: Reload nginx
+
+  handlers:
+  - name: Reload nginx
+    service:
+      name: nginx
+      state: reloaded
+
+```
+
 ## Modules
 
 ## Variables and Facts
