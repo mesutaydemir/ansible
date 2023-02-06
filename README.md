@@ -284,7 +284,7 @@ all:
 ```
 - Bir başka inventory dosyası örneği ise aşağıdaki gibidir. Burada server grupları, ansible'ın erişilebileceği port (varsayılan 22/TCP), ssl_private_key_file konumu, become kullanıcısı ve paroları gibi parametrelerin kullanım örnekleri görlüebilir.  
 
-```
+```ruby
 [atlanta_webservers]
 www-atl-1.example.com ansible_user=myuser ansible_port=5555 ansible_host=192.0.2.50
 www-atl-2.example.com ansible_user=myuser ansible_host=192.0.2.51
@@ -376,7 +376,7 @@ ansible-playbook nginx.yml --limit "!host2"
 
 - Şimdi `updat_cache=True` ile yazılım repolarının her seferinde güncellenmesi yerine örneğin 1 gün güncellenmemişse yazılım reposunu güncelleme işlemini gerçekleştirelim [**cache_valid_time: 600**]
 
-```
+```ruby
 - name: Install nginx
   hosts: all
   become: True
@@ -391,7 +391,7 @@ ansible-playbook nginx.yml --limit "!host2"
       cache_valid_time: 600
 ```
 - Çalışan task'ın ne kadar sürdüğü ve çalışıp çalışmadığını görmek için *ansible.cfg* dosyası içinde `callback_whitelist = profile_tasks` ayarlamamız gerekiyor.
-```
+```ruby
 [defaults]
 host_key_checking = False
 inventory=hosts
