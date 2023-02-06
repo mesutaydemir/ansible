@@ -282,11 +282,57 @@ all:
         bar.example.com:
         three.example.com:
 ```
+- Bir başka inventory dosyası örneği ise aşağıdaki gibidir. Burada server grupları, ansible'ın erişilebileceği port (varsayılan 22/TCP), ssl_private_key_file konumu, become kullanıcısı ve paroları gibi parametrelerin kullanım örnekleri görlüebilir.  
 
+```
+[atlanta_webservers]
+www-atl-1.example.com ansible_user=myuser ansible_port=5555 ansible_host=192.0.2.50
+www-atl-2.example.com ansible_user=myuser ansible_host=192.0.2.51
+
+[boston_webservers]
+www-bos-1.example.com ansible_user=myotheruser ansible_ssh_private_key_file=/path/to/your/.ssh/file_name
+www-bos-2.example.com ansible_user=myotheruser ansible_ssh_private_key_file=/path/to/your/.ssh/file_name
+
+[atlanta_dbservers]
+db-atl-[1:4].example.com ansible_user=myotheruser ansible_become_user=mybecomeuser ansible_become_password=mybecomeuserpassword
+
+[boston_dbservers]
+db-bos-1.example.com
+# ip is not a good usage but is valid
+192.0.2.59
+
+# webservers in all geos
+[webservers:children]
+atlanta_webservers
+boston_webservers
+
+# dbservers in all geos
+[dbservers:children]
+atlanta_dbservers
+boston_dbservers
+
+# everything in the atlanta geo
+[atlanta:children]
+atlanta_webservers
+atlanta_dbservers
+
+# everything in the boston geo
+[boston:children]
+boston_webservers
+boston_dbservers
+
+[altanta:vars]
+proxy=proxy.atlanta.example.com
+
+[all:vars]
+host_key_checking = false
+
+```
 > YAML Syntax ile ilgili dokumantasyona [YAML Syntax](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) adresinden erişilebilir.
 
 ## Playbook
-- playbook'u değiştirmeden yalnızca **host2**' de işlem yapmak istiyorsak:
+- Playbook playlerden oluşur. En tepede liste olarak playler vardır. Playler üç tire (*---*) ile başlar ve 3 tire (*---*) ile bir sonraki play'e geçilir.
+- Playbook'u değiştirmeden yalnızca **host2**' de işlem yapmak istiyorsak:
 ```
 ansible-playbook nginx.yml --limit "host0,host1"
 ansible-playbook nginx.yml --limit "!host2"
@@ -300,14 +346,14 @@ ansible-playbook nginx.yml --limit "!host2"
 - name: Install nginx
   hosts: all
   become: True
-  tags:
-    - configuration
-  gather_facts: no
+  tags: ==> *ansible-playbook abc.yml* komutu çalıştırıldığında gact gathering devre dışı bırakılır.
+    - configuration ==> *ansible-playbook abc.yml* komutu çalıştırıldığında gact gathering devre dışı bırakılır.
+  gather_facts: no ==> *ansible-playbook abc.yml* komutu çalıştırıldığında gact gathering devre dışı bırakılır.
   tasks:
   - name: Install nginx package
     apt:
       name: nginx
-      update_cache: True
+      update_cache: True ==> sudo apt update komutunun yaptığı işlem olan yazılım repolarının listesini güncelliyor.
 ```
 > gather_facts'i playbook çalıştırıldığında disable etmek için tags -configuration gather_facts: no
 
@@ -327,6 +373,23 @@ ansible-playbook nginx.yml --limit "!host2"
       state: absent
 ```
 >`ssh-keygen -R 192.168.56.20` komutu ile hedef makinedeki ssh-keygen yeniden yapılandırılıyor.
+
+- Şimdi `updat_cache=True` ile yazılım repolarının her seferinde güncellenmesi yerine örneğin 1 gün güncellenmemişse yazılım reposunu güncelleme işlemini gerçekleştirelim [**cache_valid_time: 600**]
+
+```
+- name: Install nginx
+  hosts: all
+  become: True
+  tags:
+    - configuration
+  gather_facts: no
+  tasks:
+  - name: Install nginx package
+    apt:
+      name: nginx
+      update_cache: True
+      cache_valid_time: 600
+```
 
 ## Modules
 
