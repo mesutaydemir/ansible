@@ -47,14 +47,14 @@ end
 
 ### Ansible kurulumu
 
-### Öncelikle yazılım reposunu güncelleyip python3 virtual environment paketini *python3-venv* kurmayabiliriz :) çünkü yukarıdaki Vagrant Dosyasında (provisioning file) var:
+- Öncelikle yazılım reposunu güncelleyip python3 virtual environment paketini *python3-venv* kurmayabiliriz :) çünkü yukarıdaki Vagrant Dosyasında (provisioning file) var:
 
 ```
 sudo apt update
 sudo apt install python3-venv -y
 ```
 
-Ev dizinimizin altında merkezi bir dosya altında yapılandırma dosyalarını oluşturuyoruz:
+- Ev dizinimizin altında merkezi bir dosya altında yapılandırma dosyalarını oluşturuyoruz:
 ```
 python3 -m venv ~/.venv/kamp
 ```
@@ -63,7 +63,7 @@ python3'ün path'ini belirtmek için aşağıdaki komutu çalıştırıyoruz:
 source ~/.venv/kamp/bin/activate
 ```
 
-Bu komutu etkisizleştirmek için: 
+- Bu komutu etkisizleştirmek için: 
 ```
 deactivate
 ```
@@ -72,11 +72,11 @@ deactivate
 pip3 install --upgrade pip # pip3 paketini güncelliyoruz.
 ```
 ### Dependancy management (pythonda kullanılacak kütüphaneleri indiriyoruz)
-#### requirements.txt dosyasını /home/vagrant altında oluşturuyoruz:
+- requirements.txt dosyasını /home/vagrant altında oluşturuyoruz:
 ```
 nano requirements.txt
 ```
-##### Dosyanın içine aşağıdaki satrıları ekledikten sonra kaydedip çıkıyoruz:
+- Dosyanın içine aşağıdaki satrıları ekledikten sonra kaydedip çıkıyoruz:
 ```ruby
 ansible==6.7.0
 ansible-core==2.13.7
@@ -90,7 +90,7 @@ pycparser==2.21
 PyYAML==6.0
 resolvelib==0.8.1
 ```
-### Aşağıdaki komutlar ile önce pip'i upgrade ediyoruz. Sonra *requirements.txt* içinde belirtilen python kütüphanelerini (versiyonlarında belirtildiği şekilde) güncelliyoruz. 
+- Aşağıdaki komutlar ile önce pip'i upgrade ediyoruz. Sonra *requirements.txt* içinde belirtilen python kütüphanelerini (versiyonlarında belirtildiği şekilde) güncelliyoruz. 
 
 >Not: Kütüphanelerin versiyonları güvenlik güncellemeleri ve buglardan dolayı ara sıra güncellenerek kontrol edilmeli.
 
@@ -99,12 +99,11 @@ resolvelib==0.8.1
 `pip3 install -r requirements.txt` **declarative**
 `pip3 install ansible` yazarak da kurabilirdim **imperative**
 
-
-### hosts dosyasını oluşturuyoruz. Yöneteceğimiz makineler bunlar demek:
+- hosts dosyasını oluşturuyoruz. Yöneteceğimiz makineleri bu dosyada tanımlıyoruz.
 ```
 nano hosts
 ```
-### Oluşturduğumuz host dosyasının içeriği aşağıdaki gibi:
+- Oluşturduğumuz host dosyasının içeriği aşağıdaki gibi:
 ```ruby
 host0 ansible_host=192.168.56.20
 host1 ansible_host=192.168.56.21
@@ -114,15 +113,16 @@ host2 ansible_host=192.168.56.22
 ansible_user=vagrant
 ansible_password=vagrant
 ```
-### Ad-hoc komutları ile önce bağlantıyı kontrol edeceğiz:
+### Ad-hoc 
+Bu komutlar ile önce bağlantıyı kontrol edeceğiz:
 
-Kontrol makinesinde yönetilen makinelere bağlantı yapılabildiğini doğrulayalım:
+- Kontrol makinesinde yönetilen makinelere bağlantı yapılabildiğini doğrulayalım:
 
 ```
 ansible all -i hosts -m ping --ssh-common-args='-o StrictHostKeyChecking=no'
 ```
 
-Alternatif olarak bu klasörde *ansible.cfg* dosyasını oluşturup aşağıdaki satırları ekledikten sonra:
+- Alternatif olarak bu klasörde *ansible.cfg* dosyasını oluşturup aşağıdaki satırları ekledikten sonra:
 ```
 [defaults]
 host_key_checking = False
@@ -133,7 +133,7 @@ aşağıdaki komutu çalıştırabiliriz:
 ansible all -i hosts -m ping 
 ```
 
-### Yanlış yazılan komutlarda rc ye bakıp 0 dışında bir değer ise failed dönüyor. Komut değişikliğe neden olan bir komut olmasa bile bizim ne yaptığımızı bilmediği için *CHANGED* yazar.
+- Yanlış yazılan komutlarda rc değerinde 0 dışında bir değer dönüyorsa *failed* dönüyor. Komut değişikliğe neden olan bir komut olmasa bile bizim ne yaptığımızı bilmediği için *CHANGED* yazacaktır.
 ```
 (kamp) vagrant@control:~$ ansible all -i hosts -a "asds"
 ```
@@ -146,16 +146,16 @@ host1 | FAILED | rc=2 >>
 [Errno 2] No such file or directory: b'asds'
 ```
 
-#### Servis modülü ile sshd servisinin çalışıp çalışmadığını görmek için aşaıdaki komut kullanılabilir:
+- Servis modülü ile sshd servisinin çalışıp çalışmadığını görmek için aşaıdaki komut kullanılabilir:
 ```
 ansible host0 -i hosts -m service -a "name=sshd state=started"
 ```
-#### Komutun çıktısı aşağıdaki gibi olacaktır:
+- Komutun çıktısı aşağıdaki gibi olacaktır:
 ```
 host0 | SUCCESS => {
 ```
 
-### Bazı tek seferlik işlemler için playbook yazıp bunu çalıştırmak anlamsız olabilir. örneğin makinelerin kullandıkları ram miktarını öğrenebiliriz:
+- Bazı tek seferlik işlemler için playbook yazıp bunu çalıştırmak anlamsız olabilir. Örneğin makinelerin kullandıkları ram miktarını öğrenebiliriz:
 ```
 ansible all -a "free -m"
 ```
@@ -163,78 +163,77 @@ ya da disk boyutu
 ```
 ansible all -a "df -h /"
 ```
-## host00 ve host01'in kullandığı ram miktarını kontrol etmek için
+- host00 ve host01'in kullandığı ram miktarını kontrol etmek için
 ```
 ansible 'all:host0,host1' -a "df -h /"
 ```
-#### host2 dışındaki tüm makinelerde *ls* komutunu çalıştırmak için aşağıdaki komut kullanılabilir. Sunucu kategorisi de kullanılmışsa [databsase] all yerine bu kategori isimleri ile de işlem yapılabilir.
+- host2 dışındaki tüm makinelerde *ls* komutunu çalıştırmak için aşağıdaki komut kullanılabilir. Sunucu kategorisi de kullanılmışsa [databsase] all yerine bu kategori isimleri ile de işlem yapılabilir.
 ```
 ansible 'all:!host2' -i hosts -a "ls" #
 ```
 
-#### makine ne kadar zamandır çalışır durumda olduğunu görmek için aşağıdaki komut kullanılabilir:
+- makine ne kadar zamandır çalışır durumda olduğunu görmek için aşağıdaki komut kullanılabilir:
 ```
 ansible host0 -a "uptime"
 ```
 
-#### -m parametresi ile modül çağırıp ad-hoc komutlarda bunları kullanabiliriz. Bir işlemin modülü varsa shell script yerine modül ile işlem gerçekleştirilme tercih edilmeli. Kullanılmak istenen modülün dokumantasyonuna aşağıdaki komutla ulaşılabilir:
+- -m parametresi ile modül çağırıp ad-hoc komutlarda bunları kullanabiliriz. Bir işlemin modülü varsa shell script yerine modül ile işlem gerçekleştirilme tercih edilmeli. Kullanılmak istenen modülün dokumantasyonuna aşağıdaki komutla ulaşılabilir:
 ```
 ansible-doc [modül adı]
 ansible-doc service
 ```
-#### Aşağıda bazı modüllerin kullanım örnekleri verilmektedir:
+- Aşağıda bazı modüllerin kullanım örnekleri verilmektedir:
 ```
 ansible host0 -m shell -a "systemctl status sshd | grep running"
 ansible all -m shell -a "systemctl status sshd | grep running"
 ansible host0 -m shell -a "lsb_release -a"
 ```
-#### Tüm makineri reboot et. *-b: become sudo* kullanmasak iyi olur çünkü parola soracaktır. onun yerine *-b* ile *become sudo*]. Gerekmeyen hiçbir parametre kullanılmamalı. Örneğin bazı komutlar sudo yetkisi gerektirmiyorsa *-b* ye gerek yok.
+- *sudo* komutunu doğrudan ansible komutunda kullanmasak iyi olur çünkü parola sorabilir ve otomasyonda parola girme ya da onaylama adımı yok. Bunun yerine *-b* ile *become sudo*]. Gerekmeyen hiçbir parametre kullanılmamalı. Örneğin bazı komutlar sudo yetkisi gerektirmiyorsa *-b* ye gerek yok.
 ```
-ansible all -m shell -b -a "reboot" [
+ansible all -m shell -b -a "reboot"
 ansible all -m service -b  -a "name=sshd state=restarted"
 ansible all -m shell -b -a "shutdown -h now"
 ansible host0 -m setup | less
 ```
-#### Kullanıcı adı ubuntu ve grubu ubuntu olan kullanıcı ve grub için 600 erişim hakkı verilmesi için
+- Kullanıcı adı ubuntu ve grubu ubuntu olan kullanıcı ve grub için 600 erişim hakkı verilmesi için
 ```
 ansible all -m copy -a "src=/etc/hosts dest=/tmp/hosts mode=600 owner=ubuntu group=ubuntu" 
 ```
 
-
-#### apt ile host2'ye ansible'da shell dışında bir modül kullanarak apache2'yi kuralım. Varolan en güncel sürümü kurmak için *state=present* ya da *state=latest* kullanılabilir:
+- apt ile host2'ye ansible'da shell dışında bir modül kullanarak apache2'yi kuralım. Varolan en güncel sürümü kurmak için *state=present* ya da *state=latest* kullanılabilir:
 ```
 ansible host2 -b -m apt -a "name=apache2 state=present update_cache=yes" 
 ```
-#### Servisin çalışıp çalışmadığını kontrol etmek ve durmuşsa başlatmak için *state=started* komutu kullanılabilir:
+- Servisin çalışıp çalışmadığını kontrol etmek ve durmuşsa başlatmak için *state=started* komutu kullanılabilir:
 ```
 ansible host2 -b -m service -a "name=apache2 state=started"  
 ```
-#### Yeni versiyon geldiğinde *present* var mı yok muyu kontrol eder. *latest* ise güncel sürüm var mı kontrol eder ve kurar:
+- Yeni versiyon geldiğinde *present* var mı yok muyu kontrol eder. *latest* ise güncel sürüm var mı kontrol eder ve kurar:
 ```
 ansible host2 -b -m apt -a "name=apache2 state=latest update_cache=yes" 
 ansible host2 -b -m apt -a "name=apache2=2.4.41-4ubuntu3.13 state=latest update_cache=yes" 
 ```
-#### Versiyon downgrade etmek istiyorsak hata verecektir. Downgrade için -allow_downgrade seçeneği kullanılacak. Bununla ilgili localde testler yapılabilir.
+- Versiyon downgrade etmek istiyorsak hata verecektir. Downgrade için -allow_downgrade seçeneği kullanılacak. Bununla ilgili localde testler yapılabilir.
 ```
 ansible host2 -b -m apt -a "name=apache2=2.4.41-4ubuntu3.13 state=latest update_cache=yes" 
 ```
-#### apache2 paketinin repodaki mevcut sürümlerini görmek için aşağıdaki komut kullanılabilir:
+- apache2 paketinin repodaki mevcut sürümlerini görmek için aşağıdaki komut kullanılabilir:
 ```
 apt-cache madison apache2
 ```
-#### Paket kaldırmak için:
+- Paket kaldırmak için:
 ```
 ansible host2 -b -m apt -a "name=apache2=2.4.41-4ubuntu3.13 state=absent"
 ansible host2 -b -m apt -a "name=apache2=2.4.41-4ubuntu3.13 state=absent purge=yes"
 ```
-## Nginx kurulumu için aşağıdaki komut kullanılabilir:
+- Nginx kurulumu için aşağıdaki komut kullanılabilir:
 ```
 ansible host2 -b -m apt -a "name=nginx state=latest update_cache=yes"
 ansible host2 -b -m service -a "name=nginx state=started" # servisin çalışıp çalışmadığını kontrol etmek ve durmuşsa başlatacak. 
 ```
 
 # INVENTORY
-## /home/mesut/Desktop/ansible/inventory-main/hosts dosyasındaki örnek dosyayı incele!
+- /home/mesut/Desktop/ansible/inventory-main/hosts dosyasındaki örnek dosyayı incele!
 - Geçerli bir fqdn verilirse ansible_host tanımlaması yapılmaya gerek kalmayabilir.
 - ansible_port belirtilerek default portlar dışında da portlar kullanılabilir: (örneğin ansible_port=5555)
 - parent children ilişkisi ile aynı türden fakat farklı kategorideki sunucular için ortak işlemler gerçekleştirilebilir:
@@ -245,7 +244,7 @@ atlanta_webservers
 boston_webservers
 ```
 
-## Inventory dosyası yaml formatında da olabilir:
+- Inventory dosyası yaml formatında da olabilir:
 ```ruby
 all:
   hosts:
@@ -280,17 +279,17 @@ all:
         three.example.com:
 ```
 
-## YAML Syntax ile ilgili dokumantasyona [YAML Syntax](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) adresinden erişilebilir.
+> YAML Syntax ile ilgili dokumantasyona [YAML Syntax](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) adresinden erişilebilir.
 
-# PLAYBOOK
-playbook'u değiştirmeden yalnızca **host2**' de işlem yapmak istiyorsak:
+## PLAYBOOK
+- playbook'u değiştirmeden yalnızca **host2**' de işlem yapmak istiyorsak:
 ```
 ansible-playbook nginx.yml --limit "host0,host1"
 ```
 
 >`git restore nginx.yml` komutu ile git'den clonelanan bir dosyayı ile haline getiriyoruz.
 
-#### Nginx'i kurmak için kullanılacak nginx.yml playbook dosyasının içi aşağıdaki gibidir:
+- Nginx'i kurmak için kullanılacak *nginx.yml* playbook dosyasının içi aşağıdaki gibidir:
 ```ruby
 ---
 - name: Install nginx
@@ -306,7 +305,8 @@ ansible-playbook nginx.yml --limit "host0,host1"
       update_cache: True
 ```
 > gather_facts'i playbook çalıştırıldığında disable etmek için tags -configuration gather_facts: no
-#### Nginx'i kaldırmak için kullanılacak nginx.yml playbook dosyasının içi aşağıdaki gibidir:
+
+- Nginx'i kaldırmak için kullanılacak nginx.yml playbook dosyasının içi aşağıdaki gibidir:
 ```ruby
 ---
 - name: Remove nginx
