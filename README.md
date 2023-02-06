@@ -578,8 +578,13 @@ stdout_callback = yaml
     service:
       name: nginx
       state: reloaded
-
 ```
+- handler'ın hemen çalışmasını istediğimiz durumlar olabilir. db kuruldu. config değiştirdi. restart edip user create etmek istediğimizde `metatask` kullanılacilir:
+
+```ruby
+xxx
+```
+
 
 ## Modules
 
