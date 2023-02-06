@@ -579,10 +579,50 @@ stdout_callback = yaml
       name: nginx
       state: reloaded
 ```
-- handler'ın hemen çalışmasını istediğimiz durumlar olabilir. db kuruldu. config değiştirdi. restart edip user create etmek istediğimizde `metatask` kullanılacilir:
+- handler'ın hemen çalışmasını istediğimiz durumlar olabilir. db kuruldu. config değiştirdi. restart edip user create etmek istediğimizde  metatask olarak `ansible.builtin.meta: flush_handlers` kullanılacilir. Aşağıdaki örnekte debug'tan önce `metatask` kullanılmıştır:
 
 ```ruby
-xxx
+---
+- name: Install and configure nginx
+  hosts: all
+  become: True
+  vars:
+    nginx_conf: >
+      server {
+          listen       80;
+          server_name  example.com sub.example.com;
+
+          location / {
+              proxy_pass      http://127.0.0.1:8000;
+          }
+      }
+
+  tasks:
+  - name: Install nginx package
+    apt:
+      name: nginx
+      update_cache: True
+      cache_valid_time: 60000
+
+  - name: Update nginx configuration
+    copy:
+      content: "{{ nginx_conf }}"
+      dest: /etc/nginx/conf.d/example.com.conf
+      owner: root
+      group: root
+      mode: '0644'
+    notify: Reload nginx
+  
+  - name: Force all notified handlers
+    ansible.builtin.meta: flush_handlers
+  
+  - debug: msg="After copy"
+   
+  handlers:
+  - name: Reload nginx
+    service:
+      name: nginx
+      
 ```
 
 
