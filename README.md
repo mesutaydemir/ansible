@@ -612,7 +612,35 @@ stdout_callback = yaml
       name: nginx
       
 ```
+- InventoryWdeki değerlere erişebiliyoruz. Her bir host için kendisi için tanımlanan fact'ler basılacak. Aşağıdaki örnekteki hosts dosyasındaki `myvar` değerlerine bakalım:
+```ruby
+host0 ansible_host=192.168.56.20 myvar=host0val
+host1 ansible_host=192.168.56.21 myvar=host1val
+host2 ansible_host=192.168.56.22 myvar=host2val
 
+[all:vars]
+ansible_user=vagrant
+ansible_password=vagrant
+```
+Aşağıdaki nginx.yml playbook'ta gather_fact'te tüm host'lar için tanımlanmış factler görülecektir:
+```ruby
+---
+- name: Install nginx
+  hosts: all
+  become: True
+  tasks:
+  - name: Install nginx package
+    apt:
+      name: nginx
+      update_cache: True
+      cache_valid_time: 60000
+    register: nginx_result
+
+  - name: Print result
+    debug:
+      var: nginx_result.cache_updated
+
+```
 
 ## Modules
 
