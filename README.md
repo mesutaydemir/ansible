@@ -1,6 +1,6 @@
 # Ansible Notları
 ## Vagrant Kurulumu
-Aşağıdaki komutlar ile sırasıyla *vagrant*ı Ubuntu makinemize kutup versiyonunu kontrol ediyoruz.
+Aşağıdaki komutlar ile sırasıyla *vagrant*ı Ubuntu makinemize kurup versiyonunu kontrol ediyoruz.
 ```
 sudo apt install vagrant
 vagrant --v
