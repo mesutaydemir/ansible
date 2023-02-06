@@ -538,7 +538,7 @@ stdout_callback = yaml
       state: reloaded
 
 ```
-- `server_name`e *sub.example.com* eklendikten sonra `debug: msg=After copy` taskı eklenip playbook yeniden çalıştırıldığında
+- `server_name`e *sub.example.com* eklendikten sonra `debug: msg="After copy"` taskı eklenip playbook yeniden çalıştırıldığında
 ```ruby
 ---
 - name: Install and configure nginx
