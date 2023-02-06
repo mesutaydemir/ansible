@@ -346,8 +346,6 @@ ansible-playbook nginx.yml --limit "!host2"
 - name: Install nginx
   hosts: all
   become: True
-  tags: ==> *ansible-playbook abc.yml* komutu çalıştırıldığında gact gathering devre dışı bırakılır.
-    - configuration ==> *ansible-playbook abc.yml* komutu çalıştırıldığında gact gathering devre dışı bırakılır.
   gather_facts: no ==> *ansible-playbook abc.yml* komutu çalıştırıldığında gact gathering devre dışı bırakılır.
   tasks:
   - name: Install nginx package
@@ -355,7 +353,7 @@ ansible-playbook nginx.yml --limit "!host2"
       name: nginx
       update_cache: True ==> sudo apt update komutunun yaptığı işlem olan yazılım repolarının listesini güncelliyor.
 ```
-> gather_facts'i playbook çalıştırıldığında disable etmek için tags -configuration gather_facts: no
+> gather_facts'i playbook çalıştırıldığında disable etmek için `gather_facts: no` değeri kullanılır.
 
 - Nginx'i kaldırmak için kullanılacak nginx.yml playbook dosyasının içi aşağıdaki gibidir:
 ```ruby
@@ -363,8 +361,6 @@ ansible-playbook nginx.yml --limit "!host2"
 - name: Remove nginx
   hosts: all
   become: True
-  tags:
-    - configuration
   gather_facts: no
   tasks:
   - name: Remove nginx package
@@ -380,8 +376,6 @@ ansible-playbook nginx.yml --limit "!host2"
 - name: Install nginx
   hosts: all
   become: True
-  tags:
-    - configuration
   gather_facts: no
   tasks:
   - name: Install nginx package
@@ -409,8 +403,6 @@ callbacks_enabled = timer
 - name: Install nginx
   hosts: all
   become: True
-  tags:
-    - configuration
   gather_facts: no
   tasks:
   - name: Install nginx package
@@ -425,8 +417,6 @@ callbacks_enabled = timer
 - name: Install nginx
   hosts: all
   become: True
-  tags:
-    - configuration
   gather_facts: no
   tasks:
   - name: Install nginx package
@@ -473,8 +463,6 @@ ok: [host2] => {
 - name: Install nginx
   hosts: all
   become: True
-  tags:
-    - configuration
   gather_facts: no
   tasks:
   - name: Install nginx package
