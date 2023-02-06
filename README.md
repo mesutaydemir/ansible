@@ -622,7 +622,7 @@ host2 ansible_host=192.168.56.22 myvar=host2val
 ansible_user=vagrant
 ansible_password=vagrant
 ```
-Aşağıdaki *nginx.yml* playbook'ta *task*ta tüm host'lar için tanımlanmış factler görülecektir:
+Aşağıdaki *nginx.yml* playbook'ta *task*ta tüm host'lar için *host1val* fact'i görülecektir:
 ```ruby
 ---
 - name: Install nginx
