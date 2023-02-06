@@ -1,17 +1,21 @@
 # Ansible Notları
 ## Vagrant Kurulumu
-
+Aşağıdaki komutlar ile sırasıyla *vagrant*ı Ubuntu makinemize kutup versiyonunu kontrol ediyoruz.
+```
+sudo apt install vagrant
+vagrant --v
+```
 ## Vagrant Komutları
 ```
-vagrant status
+vagrant status ==> tüm makinelerin durumunu kontrol etmek için kullanılır.
 vagrant box list
-vagrant up
-vagrant destroy -f
+vagrant up ==> Vagrant dosyasındaki verilere göre makineleri oluşturur.
+vagrant destroy -f ==> tüm makineleri silmek için kullanılır.
 vagrant --help
 vagrant ssh ==> Varsayılan olarak kontrol makinesine bağlanır.
 vagrant box --help
-vagrant suspend
-vagrant resume
+vagrant suspend ==> tüm makineleri uyku moduna alır.
+vagrant resume ==> tüm makineleri uyku modundan çıkarıp başlatır.
 vagrant init ubuntu/focal64 --box-version 20230119.0.0 ==> vagrant makinesini up etmeden önce oluşturulan vagrant dosyası
 ```
 ### Örnek Bir Vagrant Dosyası Aşağıdaki gibidir:
@@ -45,7 +49,7 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-### Ansible kurulumu
+## Ansible kurulumu
 
 - Öncelikle yazılım reposunu güncelleyip python3 virtual environment paketini *python3-venv* kurmayabiliriz :) çünkü yukarıdaki Vagrant Dosyasında (provisioning file) var:
 
@@ -113,7 +117,7 @@ host2 ansible_host=192.168.56.22
 ansible_user=vagrant
 ansible_password=vagrant
 ```
-### Ad-hoc 
+## Ad-hoc 
 Bu komutlar ile önce bağlantıyı kontrol edeceğiz:
 
 - Kontrol makinesinde yönetilen makinelere bağlantı yapılabildiğini doğrulayalım:
@@ -232,7 +236,7 @@ ansible host2 -b -m apt -a "name=nginx state=latest update_cache=yes"
 ansible host2 -b -m service -a "name=nginx state=started" # servisin çalışıp çalışmadığını kontrol etmek ve durmuşsa başlatacak. 
 ```
 
-# INVENTORY
+## Inventory
 - /home/mesut/Desktop/ansible/inventory-main/hosts dosyasındaki örnek dosyayı incele!
 - Geçerli bir fqdn verilirse ansible_host tanımlaması yapılmaya gerek kalmayabilir.
 - ansible_port belirtilerek default portlar dışında da portlar kullanılabilir: (örneğin ansible_port=5555)
@@ -281,7 +285,7 @@ all:
 
 > YAML Syntax ile ilgili dokumantasyona [YAML Syntax](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) adresinden erişilebilir.
 
-## PLAYBOOK
+## Playbook
 - playbook'u değiştirmeden yalnızca **host2**' de işlem yapmak istiyorsak:
 ```
 ansible-playbook nginx.yml --limit "host0,host1"
