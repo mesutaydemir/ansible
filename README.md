@@ -404,6 +404,89 @@ host_key_checking = False
 inventory=hosts
 callbacks_enabled = timer
 ```
+- `register: nginx_result` kullanılarak playbook çalıştırıldığında CLI çıktısında bir değişiklik göstermiyor. `debug` modülüyle nginx_result'ı göstereceğiz.
+```ruby
+- name: Install nginx
+  hosts: all
+  become: True
+  tags:
+    - configuration
+  gather_facts: no
+  tasks:
+  - name: Install nginx package
+    apt:
+      name: nginx
+      update_cache: True
+      cache_valid_time: 600
+    register: nginx_result
+```
+- `debug` modülüyle nginx_result'ı göstermek için `name: Print result` task altındaki parametreler kullanılacak:
+```ruby
+- name: Install nginx
+  hosts: all
+  become: True
+  tags:
+    - configuration
+  gather_facts: no
+  tasks:
+  - name: Install nginx package
+    apt:
+      name: nginx
+      update_cache: True
+      cache_valid_time: 600
+    register: nginx_result
+  - name: Print result
+    debug:
+      var: nginx_result
+```
+Yukarıdaki playbook çalıştırıldığnda komut satırında aşağıdaki gibi bir çıktı görülecektir:
+```ruby
+TASK [Print result] ******************************************************************************************************************************************************
+ok: [host0] => {
+    "nginx_result": {
+        "cache_update_time": 1675671772,
+        "cache_updated": true,
+        "changed": false,
+        "failed": false
+    }
+}
+ok: [host1] => {
+    "nginx_result": {
+        "cache_update_time": 1675671782,
+        "cache_updated": true,
+        "changed": false,
+        "failed": false
+    }
+}
+ok: [host2] => {
+    "nginx_result": {
+        "cache_update_time": 1675671808,
+        "cache_updated": true,
+        "changed": false,
+        "failed": false
+    }
+}
+
+```
+> `var: nginx_result` yerine `var: nginx_result.cache_updated` yazarak cache_updated bilgisi alınabilir.
+```ruby
+- name: Install nginx
+  hosts: all
+  become: True
+  tags:
+    - configuration
+  gather_facts: no
+  tasks:
+  - name: Install nginx package
+    apt:
+      name: nginx
+      update_cache: True
+      cache_valid_time: 600
+    register: nginx_result
+  - name: Print result
+    debug:
+      var: nginx_result.cache_updated
+```
 ## Modules
 
 ## Variables and Facts
