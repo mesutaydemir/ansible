@@ -388,7 +388,7 @@ ansible-playbook nginx.yml --limit "!host2"
     apt:
       name: nginx
       update_cache: True
-      cache_valid_time: 600
+      cache_valid_time: 6000
 ```
 - Çalışan task'ın ne kadar sürdüğü ve çalışıp çalışmadığını görmek için *ansible.cfg* dosyası içinde `callback_whitelist = profile_tasks` ayarlamamız gerekiyor.
 ```ruby
@@ -417,7 +417,7 @@ callbacks_enabled = timer
     apt:
       name: nginx
       update_cache: True
-      cache_valid_time: 600
+      cache_valid_time: 6000
     register: nginx_result
 ```
 - `debug` modülüyle nginx_result'ı göstermek için `name: Print result` task altındaki parametreler kullanılacak:
@@ -433,7 +433,7 @@ callbacks_enabled = timer
     apt:
       name: nginx
       update_cache: True
-      cache_valid_time: 600
+      cache_valid_time: 6000
     register: nginx_result
   - name: Print result
     debug:
@@ -481,7 +481,7 @@ ok: [host2] => {
     apt:
       name: nginx
       update_cache: True
-      cache_valid_time: 600
+      cache_valid_time: 6000
     register: nginx_result
   - name: Print result
     debug:
@@ -503,6 +503,7 @@ stdout_callback = yaml
     apt:
       name: nginx
       update_cache: True
+      cache_valid_time: 6000
 
   - name: Update nginx configuration
     copy:
