@@ -641,7 +641,7 @@ Aşağıdaki *nginx.yml* playbook'ta *task*ta tüm host'lar için *host1val* fac
       var: nginx_result.cache_updated
   - name: Print result
    debug:
-     var: hostvars["host1"].myvar
+     var: hostvars["host1"]["myvar"]
 ```
 Yukarıdaki *nginx.yml* playbook'un çıktısı aşağıdaki gibi olacaktır:
 ```ruby
@@ -651,8 +651,59 @@ ok: [host1] =>
   hostvars["host1"].myvar: host1val
 ok: [host2] => 
   hostvars["host1"].myvar: host1val
+```
+Şimdi başka bir örneğe bakalım. Host dosyamız aşağıdaki gibi olsun:
+```ruby
+host0 ansible_host=192.168.56.20 myvar=host0val
+host1 ansible_host=192.168.56.21 myvar=host1val
+host2 ansible_host=192.168.56.22 myvar=host2val another-val=x
+
+[all:vars]
+ansible_user=vagrant
+ansible_password=vagrant
+```
+Host2'deki *another-val=x* değerini tüm tasklarda görmek için nginx.yml playbook'u aşağıdaki gibi olacaktır:
+```ruby                                                                          
+---
+- name: Install nginx
+  hosts: all
+  become: True
+  tasks:
+  - name: Install nginx package
+    apt:
+      name: nginx
+      update_cache: True
+      cache_valid_time: 60000
+    register: nginx_result
+
+  - name: Print result
+    debug:
+      var: hostvars["host1"].myvar
+
+  - name: Print result
+    debug:
+      var: hostvars["host2"]["another-val"]
 
 ```
+- Playbook içinde register dışında (farklı bir task çalıştırmayacağız) fact (variable) set etmek. Aşağıdaki örnekte `is_cache_updated` :
+```ruby
+---
+- name: Install nginx
+  hosts: all
+  become: True
+  tasks:
+  - name: Install nginx package
+    apt:
+      name: nginx
+      update_cache: True
+      cache_valid_time: 60000
+    register: nginx_result
+
+  - name: Print result
+    debug:
+      var: is_cache_updated
+```
+
 ## Modules
 
 ## Variables and Facts
