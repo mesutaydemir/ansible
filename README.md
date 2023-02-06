@@ -468,7 +468,7 @@ ok: [host2] => {
 }
 
 ```
-> `var: nginx_result` yerine `var: nginx_result.cache_updated` yazarak cache_updated bilgisi alınabilir.
+- `var: nginx_result` yerine `var: nginx_result.cache_updated` yazarak yalnızca *cache_updated* bilgisi alınabilir:
 ```ruby
 - name: Install nginx
   hosts: all
