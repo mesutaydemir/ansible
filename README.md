@@ -498,12 +498,27 @@ stdout_callback = yaml
 - `copy` modülü ile özellikle şablon görevi gören dosyalar *src* ve *dest* ile kaynak ve hedef konumları belirtilerek dosyalar kopyalanır. Ayrıca tasklarda `notify` ile belirtilen ilgili handler altındaki tasklar yapılır. Aşağıdaki örnekte jjna2 {{nginx_conf}} şablon dosyası host makinelerde /etc/nginx/conf.d altına example.com.conf olarak sahibi ve sahibinin grubu root olacak şekilde 644 erişim izni ile kopyalanıyor. Daha sonra notify ile handlers altında belirtilen nginx'i yeniden başlatma task'ı çağrılıyor:
 
 ```ruby
+  ---
+- name: Install and configure nginx
+  hosts: all
+  become: True
+  vars:
+    nginx_conf: >
+      server {
+          listen       80;
+          server_name  example.com;
+
+          location / {
+              proxy_pass      http://127.0.0.1:8000;
+          }
+      }
+
   tasks:
   - name: Install nginx package
     apt:
       name: nginx
       update_cache: True
-      cache_valid_time: 6000
+      cache_valid_time: 60000
 
   - name: Update nginx configuration
     copy:
@@ -513,7 +528,51 @@ stdout_callback = yaml
       group: root
       mode: '0644'
     notify: Reload nginx
+  
+   - debug: msg=After copy
+   
+  handlers:
+  - name: Reload nginx
+    service:
+      name: nginx
+      state: reloaded
 
+```
+- `server_name`e *sub.example.com* eklendikten sonra `debug: msg=After copy` taskı eklenip playbook yeniden çalıştırıldığında
+```ruby
+---
+- name: Install and configure nginx
+  hosts: all
+  become: True
+  vars:
+    nginx_conf: >
+      server {
+          listen       80;
+          server_name  example.com sub.example.com;
+
+          location / {
+              proxy_pass      http://127.0.0.1:8000;
+          }
+      }
+
+  tasks:
+  - name: Install nginx package
+    apt:
+      name: nginx
+      update_cache: True
+      cache_valid_time: 60000
+
+  - name: Update nginx configuration
+    copy:
+      content: "{{ nginx_conf }}"
+      dest: /etc/nginx/conf.d/example.com.conf
+      owner: root
+      group: root
+      mode: '0644'
+    notify: Reload nginx
+  
+  - debug: msg="After copy"
+   
   handlers:
   - name: Reload nginx
     service:
