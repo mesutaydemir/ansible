@@ -289,6 +289,7 @@ all:
 - playbook'u değiştirmeden yalnızca **host2**' de işlem yapmak istiyorsak:
 ```
 ansible-playbook nginx.yml --limit "host0,host1"
+ansible-playbook nginx.yml --limit "!host2"
 ```
 
 >`git restore nginx.yml` komutu ile git'den clonelanan bir dosyayı ile haline getiriyoruz.
