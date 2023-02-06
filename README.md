@@ -395,7 +395,14 @@ ansible-playbook nginx.yml --limit "!host2"
 [defaults]
 host_key_checking = False
 inventory=hosts
-callback_whitelist = profile_tasks
+callbacks_enabled = profile_tasks
+```
+- Toplamda tüm taskların ne kadar sürede tamamlandığını görmek için `callbacks_enabled = profile_tasks` kullanılır.
+```ruby
+[defaults]
+host_key_checking = False
+inventory=hosts
+callbacks_enabled = timer
 ```
 ## Modules
 
