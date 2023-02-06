@@ -685,12 +685,14 @@ Host2'deki *another-val=x* değerini tüm tasklarda görmek için nginx.yml play
       var: hostvars["host2"]["another-val"]
 
 ```
-- Playbook içinde register dışında (farklı bir task çalıştırmayacağız) fact (variable) set etmek. Aşağıdaki örnekte `is_cache_updated` :
+- Playbook içinde register dışında (farklı bir task çalıştırmayacağız) fact (variable) set etmek. Aşağıdaki örnekte `is_cache_updated` olarak `update_cache` task'ının yapılıp yapılmadığını görebileceğimiz bir fact görebiliriz :
 ```ruby
 ---
 - name: Install nginx
   hosts: all
   become: True
+  vars:
+    another_val: val
   tasks:
   - name: Install nginx package
     apt:
@@ -699,9 +701,17 @@ Host2'deki *another-val=x* değerini tüm tasklarda görmek için nginx.yml play
       cache_valid_time: 60000
     register: nginx_result
 
+  - name: Debug nginx_result
+    debug:
+      var: nginx_result
+
+  - set_fact:
+      is_cache_updated: "{{ nginx_result.cache_updated }}"
+
   - name: Print result
     debug:
       var: is_cache_updated
+
 ```
 
 ## Modules
