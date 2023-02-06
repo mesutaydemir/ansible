@@ -71,8 +71,8 @@ deactivate
 ```
 pip3 install --upgrade pip # pip3 paketini güncelliyoruz.
 ```
-### Dependancy management (pythonda kullanılacak kütüphaneleri indiriyoruz)
-- requirements.txt dosyasını /home/vagrant altında oluşturuyoruz:
+### Dependancy management
+- pythonda kullanılacak kütüphaneleri tanımlamak için *requirements.txt* dosyasını /home/vagrant altında oluşturuyoruz:
 ```
 nano requirements.txt
 ```
@@ -322,3 +322,15 @@ ansible-playbook nginx.yml --limit "host0,host1"
       state: absent
 ```
 >`ssh-keygen -R 192.168.56.20` komutu ile hedef makinedeki ssh-keygen yeniden yapılandırılıyor.
+
+## Modules
+
+## Variables and Facts
+
+## Conditionals
+
+## Loops
+
+## Roles
+
+## Additional topics(Ansible Galaxy, AWX)
