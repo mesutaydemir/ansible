@@ -390,7 +390,13 @@ ansible-playbook nginx.yml --limit "!host2"
       update_cache: True
       cache_valid_time: 600
 ```
-
+- Çalışan task'ın ne kadar sürdüğü ve çalışıp çalışmadığını görmek için *ansible.cfg* dosyası içinde `callback_whitelist = profile_tasks` ayarlamamız gerekiyor.
+```
+[defaults]
+host_key_checking = False
+inventory=hosts
+callback_whitelist = profile_tasks
+```
 ## Modules
 
 ## Variables and Facts
