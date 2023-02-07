@@ -880,6 +880,23 @@ others.yml içeriği
 ```ruby
 domain_name: kamp.lkd.org.tr
 ```
+Bazı senaryolarda kontrol makinesi üzerinde de değişiklikler de yapılabilir. `hosts: localhost` ve `connection: local` ile kontrol makinesinde değişiklikler yapılabilir. Aşağıdaki örnekte kontrol makinesindeki /etc/hosts dosyasında 192.168.56.20 example.com olarak tanımlanmaktadır. regexp ile match eden satıtı replace ediyor bulmazsa ekliyor:
+```ruby
+- name: Update /etc/hosts file
+  connection: local
+  hosts: localhost
+  become: true
+  tasks:
+  - name: Add example.com to the /etc/hosts file
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      regexp: '^192\.168\.56\.20'
+      line: 192.168.56.20 example.com
+      owner: root
+      group: root
+      mode: '0644' 
+```
+Kontrol makinesinde `cat /etc/hosts` komutu ile değişikliğin kontrolü sağlanacaktır.
 ## Modules
 
 ## Variables and Facts
