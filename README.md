@@ -897,6 +897,37 @@ Bazı senaryolarda kontrol makinesi üzerinde de değişiklikler de yapılabilir
       mode: '0644' 
 ```
 Kontrol makinesinde `cat /etc/hosts` komutu ile değişikliğin kontrolü sağlanacaktır.
+- Ansible ile docker container çalıştırmak için aşağıdaki örnek incelenebilir. Bu örnekte ghost uygulaması kurulumu öncesinde virtualenv paketi kurulduktan sonra ghost uygulamasının docker image'ı (ghost:5.33.2-alpine) kurulmakta, içeride 2380 portunda çalışan uygulama 8000 portundan hizmet vermektedir.
+```ruby
+- name: Install ghost as a docker container
+  hosts: all
+  become: True
+  tasks:
+  - name: Install virtualenv package
+    apt:
+      name: virtualenv
+      update_cache: True
+    become: True
+
+  - name: Install docker into the specified (virtualenv)
+    pip:
+      name: docker
+      virtualenv: ~/.venv/myvenv
+
+  - name: Set python interpreter
+    set_fact:
+      ansible_python_interpreter: ~/.venv/myvenv/bin/python3
+
+  - name: Run ghost as a Docker container
+    docker_container:
+      name: ghost
+      image: ghost:5.33.2-alpine
+      env:
+        NODE_ENV: development
+        url: "http://example.com:8000"
+      ports:
+      - "8000:2368"
+```
 ## Modules
 
 ## Variables and Facts
