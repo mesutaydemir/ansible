@@ -962,7 +962,7 @@ Kontrol makinesinde `cat /etc/hosts` komutu ile değişikliğin kontrolü sağla
   - name: Download index.html for ghost instance for a single host
     get_url:
       url: "http://{{ ansible_host }}:8000"
-      dest: index.html
+      dest: ./index.html
     delegate_to: 127.0.0.1
     run_once: True
     register: result
