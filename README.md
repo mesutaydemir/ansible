@@ -772,6 +772,7 @@ sudo docker run hello-world
       state: started
       enabled: yes
 ```
+Yukarıdaki playbook kontrol makinesinden çalıştırıldığında 3 host'a da docker engine kurulabildi.
 ## Modules
 
 ## Variables and Facts
