@@ -828,6 +828,26 @@ Yukarıdaki playbook kontrol makinesinden çalıştırıldığında 3 host'a da 
       state: present
       update_cache: true
 ```
+> Ansible playbook'u kontrol etmek için `--check` mod kullanılsa da kısıtları olduğu unutulmamlıdır:
+```
+ansible-playbook docker-install.yml --check
+```
+> Playbooklarda taskların altında `debugger: on failed` kullanılarak debugging yapılabilir. Aşağıda playbook genelinde ve task'a özel örnekler verilmektedir:
+```ruby
+- name: Docker installation
+  hosts: all
+  debugger: on_skipped
+  become: true
+```
+```ruby
+- name: Play
+  hosts: all
+  debugger: never
+  tasks:
+    - name: Execute a command
+      ansible.builtin.command: "false"
+      debugger: on_failed
+```
 ## Modules
 
 ## Variables and Facts
