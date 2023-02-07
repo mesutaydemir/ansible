@@ -848,6 +848,23 @@ ansible-playbook docker-install.yml --check
       ansible.builtin.command: "false"
       debugger: on_failed
 ```
+> Tek bir seferde kaç tane host için işlem yapılması isteniyorsa; bir başka değişle her host için önce 1 task'ı gerçekleştirip sonra diğer tasklara geçilmesi isteniyorsa `-f 1` değeri kullanılabilir. Buradaki 1 değeri işlemin aynı anda gerçekleştirileceği host'u belirtiyor. Bir başka değişle önce 1 host'da işlemleri tamamlayıp sonra diğer host'a geçiliyor:
+```ruby
+ansible-playbook nginx-template.yml -f 1
+```
+Bazı senaryolarda group_vars özelliği ile hostları gruplara ayırıp ayrılan hostlara özel işlemler (örneğin alan adı tanımlaması) yapılmak istenebilir. Bunun için öncelikle inventory dosyamızı aşağıdaki gibi yapılandırarak host1 ve host2'yi *others* grubuna tanımlıyoruz: 
+
+host0 ansible_host=192.168.56.20
+[others]
+host1 ansible_host=192.168.56.21
+host2 ansible_host=192.168.56.22
+
+Sonrasında playbook dosyamızın altında *group_vars* adında bir dizin oluşturup bu dizin altında *others.yml* dosyasını oluşturup içeriğini aşağıdaki gibi düzenliyoruz. Dosyayı kaydedip çıktıktan sonra playbook'umuzu çalıştırdığımızda host1 ve host2'deki nginx'te tanımlı alan adının `kamp.lkd.org.tr` olarak değiştiği kontrol edilebilir:
+
+```ruby
+domain_name: kamp.lkd.org.tr
+```
+
 ## Modules
 
 ## Variables and Facts
