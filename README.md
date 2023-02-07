@@ -738,6 +738,40 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 sudo docker run hello-world
 ```
+- ChatGPT tarafından *Can you write an ansible playbook that installs docker engine?* ifadesi ile elde edilen playbook aşağıdaki gibidir:
+
+```ruby
+---
+- name: Install Docker Engine
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Update the package database
+    apt:
+      update_cache: yes
+
+  - name: Install Docker's GPG key
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+  - name: Add Docker's package repository
+    apt_repository:
+      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
+      state: present
+
+  - name: Install Docker engine
+    apt:
+      name: docker-ce
+      state: present
+
+  - name: Start and enable Docker service
+    service:
+      name: docker
+      state: started
+      enabled: yes
+```
 ## Modules
 
 ## Variables and Facts
