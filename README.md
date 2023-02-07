@@ -854,17 +854,32 @@ ansible-playbook nginx-template.yml -f 1
 ```
 Bazı senaryolarda group_vars özelliği ile hostları gruplara ayırıp ayrılan hostlara özel işlemler (örneğin alan adı tanımlaması) yapılmak istenebilir. Bunun için öncelikle inventory dosyamızı aşağıdaki gibi yapılandırarak host1 ve host2'yi *others* grubuna tanımlıyoruz: 
 
+```ruby
 host0 ansible_host=192.168.56.20
 [others]
 host1 ansible_host=192.168.56.21
 host2 ansible_host=192.168.56.22
+```
+İlerleyen adımda Playbook'ta (nginx-tenplate.yml)`vars: domain_name: example.com` silinip ya da yoruma alınmalı:
+```ruby
+---
+- name: Install and configure nginx
+  hosts: all
+  become: True
+  #vars:
+    #domain_name: example.com
+```
 
-Sonrasında playbook dosyamızın altında *group_vars* adında bir dizin oluşturup bu dizin altında *others.yml* dosyasını oluşturup içeriğini aşağıdaki gibi düzenliyoruz. Dosyayı kaydedip çıktıktan sonra playbook'umuzu çalıştırdığımızda host1 ve host2'deki nginx'te tanımlı alan adının `kamp.lkd.org.tr` olarak değiştiği kontrol edilebilir:
+Sonrasında playbook dosyamızın altında *group_vars* adında bir dizin oluşturup bu dizin altında *all.yml* ve *others.yml* dosyasını oluşturup içeriğini aşağıdaki gibi düzenliyoruz. Dosyayı kaydedip çıktıktan sonra playbook'umuzu çalıştırdığımızda host1 ve host2'deki nginx'te tanımlı alan adının `kamp.lkd.org.tr` olarak değiştiği kontrol edilebilir:
 
+all.yml içeriği:
+```ruby
+domain_name: kamp.linux.org.tr
+```
+others.yml içeriği
 ```ruby
 domain_name: kamp.lkd.org.tr
 ```
-
 ## Modules
 
 ## Variables and Facts
