@@ -928,6 +928,48 @@ Kontrol makinesinde `cat /etc/hosts` komutu ile değişikliğin kontrolü sağla
       ports:
       - "8000:2368"
 ```
+```ruby
+  ---
+- name: Install ghost as a docker container
+  hosts: all
+  become: True
+  tasks:
+  - name: Install virtualenv package
+    apt:
+      name: virtualenv
+      update_cache: True
+    become: True
+
+  - name: Install docker into the specified (virtualenv)
+    pip:
+      name: docker
+      virtualenv: ~/.venv/myvenv
+
+  - name: Set python interpreter
+    set_fact:
+      ansible_python_interpreter: ~/.venv/myvenv/bin/python3
+
+  - name: Run ghost as a Docker container
+    docker_container:
+      name: ghost
+      image: ghost:5.33.2-alpine
+      env:
+        NODE_ENV: development
+        url: "http://localhost:8000"
+      ports:
+      - "8000:2368
+      
+  - name: Download index.html for ghost instance for a single host
+    get_url:
+      url: "http://{{ ansible_host }}:8000"
+      dest: index.html
+    delegate_to: 127.0.0.1
+    run_once: True
+    register: result
+    retries: 10
+    delay: 10
+    until: not result.failed
+```
 ## Modules
 
 ## Variables and Facts
