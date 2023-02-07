@@ -773,6 +773,59 @@ sudo docker run hello-world
       enabled: yes
 ```
 Yukarıdaki playbook kontrol makinesinden çalıştırıldığında 3 host'a da docker engine kurulabildi.
+- Aşağıdaki playbook örneğinde ise eğitmen tarafından oluşturulmuş docker engine yükleme playbook'u verilmektedir:
+```ruby
+---
+- name: Docker installation
+  hosts: all
+  become: true
+  tasks:
+  - name: Uninstall old versions
+    ansible.builtin.apt:
+      package:
+      - docker
+      - docker-engine
+      - docker.io
+      - containerd
+      - runc
+      state: absent
+
+  - name: Update the apt package index and install packages to allow apt to use a repository over HTTPS
+    ansible.builtin.apt:
+      name:
+      - ca-certificates
+      - gnupg
+      - lsb-release
+      state: present
+      update_cache: true
+
+  - name: Create the keyring directory for apt
+    ansible.builtin.file:
+      path: /etc/apt/keyrings
+      state: directory
+
+  - name: Add Docker’s official GPG key
+    ansible.builtin.get_url:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      dest: /etc/apt/keyrings/docker.asc
+      mode: '0644'
+
+  - name: Set up the repository
+    ansible.builtin.apt_repository:
+      repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+      state: present
+      update_cache: true
+      mode: '0644'
+
+  - name: Install Docker Engine, and containerd
+    ansible.builtin.apt:
+      name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      state: present
+      update_cache: true
+```
 ## Modules
 
 ## Variables and Facts
