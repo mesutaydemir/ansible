@@ -823,6 +823,8 @@ Yukarıdaki playbook kontrol makinesinden çalıştırıldığında 3 host'a da 
       - docker-ce
       - docker-ce-cli
       - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
       state: present
       update_cache: true
 ```
