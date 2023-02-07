@@ -860,7 +860,7 @@ host0 ansible_host=192.168.56.20
 host1 ansible_host=192.168.56.21
 host2 ansible_host=192.168.56.22
 ```
-İlerleyen adımda Playbook'ta (nginx-tenplate.yml)`vars: domain_name: example.com` silinip ya da yoruma alınmalı:
+İlerleyen adımda Playbook'ta (nginx-tenplate.yml)`vars: domain_name: example.com` silinmeli ya da yoruma alınmalı:
 ```ruby
 ---
 - name: Install and configure nginx
