@@ -996,5 +996,23 @@ ansible-galaxy init docker
 - dummy/templates #
 - dummy/files #
 - dummy/tests # molecule projesi ile ansible taskları test edilebilir.
+- Örnek bir roles dizin içeriği aşağıdaki gibi olabilir:
+```ruby
+└── docker
+    ├── README.md
+    ├── defaults
+    │   └── main.yml
+    ├── handlers
+    │   └── main.yml
+    ├── meta
+    │   └── main.yml
+    ├── tasks
+    │   └── main.yml
+    ├── tests
+    │   ├── inventory
+    │   └── test.yml
+    └── vars
+        └── main.yml
+```
 ## Loops
 ## Additional topics(Ansible Galaxy, AWX)
