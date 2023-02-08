@@ -977,8 +977,24 @@ Kontrol makinesinde `cat /etc/hosts` komutu ile değişikliğin kontrolü sağla
 
 ## Conditionals
 
-## Loops
 
 ## Roles
 
+dummy klasörü oluştur
+```
+mkdir ~/dummy
+```
+Ansible'da bulunan varsayılan şablona veya kendi şablonunuza dayalı olarak temel bir koleksiyon iskeleti oluşturmak için:
+```
+ansible-galaxy init docker
+```
+- dummy altında oluşturulan dosya/klasörlerin açıklamalarına [buradan] (https://danuka-praneeth.medium.com/ansible-roles-and-ansible-galaxy-b224f4693cd4) erişilebilir.
+- dummy/docker/defaults # varsayılanı example.com olan fakat her birim için farklı alan adları için 
+- dummy/docker/vars # ubuntu distrosu için release adı. Çoğunlukla overrite edilmeyen değişkenler 
+- dummy/handlers #
+- dummy/tasks #
+- dummy/templates #
+- dummy/files #
+- dummy/tests # molecule projesi ile ansible taskları test edilebilir.
+## Loops
 ## Additional topics(Ansible Galaxy, AWX)
