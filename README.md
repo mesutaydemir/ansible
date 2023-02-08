@@ -117,7 +117,7 @@ host2 ansible_host=192.168.56.22
 ansible_user=vagrant
 ansible_password=vagrant
 ```
-> NOT! `hosts`,`ansible.cfg` ve `playbook.yml` dosyaları aynı dizinde olmalı.
+> NOT! ansible `sudo apt install ansible` komutu ile kurulmuyorsa `hosts`,`ansible.cfg` ve `playbook.yml` dosyaları aynı dizinde olmalı.
 ## Ad-hoc 
 Bu komutlar ile önce bağlantıyı kontrol edeceğiz:
 
