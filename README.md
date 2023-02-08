@@ -391,7 +391,7 @@ host_key_checking = False
 inventory=hosts
 callbacks_enabled = profile_tasks
 ```
-- Toplamda tüm taskların ne kadar sürede tamamlandığını görmek için `callbacks_enabled = profile_tasks` kullanılır.
+- Toplamda tüm taskların ne kadar sürede tamamlandığını görmek için `callbacks_enabled = timer` kullanılır.
 ```ruby
 [defaults]
 host_key_checking = False
