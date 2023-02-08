@@ -388,7 +388,7 @@ ansible-playbook nginx.yml --limit "!host2"
 ```ruby
 [defaults]
 host_key_checking = False
-inventory=hosts
+inventory = hosts
 callbacks_enabled = profile_tasks
 ```
 - Toplamda tüm taskların ne kadar sürede tamamlandığını görmek için `callbacks_enabled = timer` kullanılır.
@@ -479,7 +479,7 @@ ok: [host2] => {
 ```ruby
 [defaults]
 host_key_checking = False
-inventory=hosts
+inventory = hosts
 callbacks_enabled = profile_tasks
 stdout_callback = yaml
 ```
