@@ -50,8 +50,8 @@ end
 ```
 
 ## Ansible kurulumu
-
-- Öncelikle yazılım reposunu güncelleyip python3 virtual environment paketini *python3-venv* kurmayabiliriz :) çünkü yukarıdaki Vagrant Dosyasında (provisioning file) var:
+- Öncelikle `vagrant ssh` komutu ile kontrol makinresine bağlantı yapıyoruz
+- yazılım reposunu güncelleyip python3 virtual environment paketini *python3-venv* kurmayabiliriz :) çünkü yukarıdaki Vagrant Dosyasında (provisioning file) var:
 
 ```
 sudo apt update
