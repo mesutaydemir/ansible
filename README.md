@@ -130,7 +130,7 @@ ansible all -i hosts -m ping --ssh-common-args='-o StrictHostKeyChecking=no'
 ```
 [defaults]
 host_key_checking = False
-inventory=hosts
+inventory = hosts
 ```
 aşağıdaki komutu çalıştırabiliriz:
 ```
