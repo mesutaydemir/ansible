@@ -990,6 +990,7 @@ ansible-galaxy init docker
 ```
 > Ansible galaxy koleksiyonlarına https://galaxy.ansible.com adresinden erişilebilir. Örnek olarak burada kullanılmak istenen koleksiyon `ansible-galaxy install buluma.moodle` komutu çalıştırıldığında koleksiyon dosyaları `/home/vagrant/.ansible/roles/buluma.moodle` dizinine kopyalanır. Hnagi komut ve rol adının kullanılacağı koleksiyonda yer alan *Details* ve *ReadMe* sekmelerinden erişilmelidir.
 
+> `ansible-galaxy search paket_adı --author yazar_adi` komutu ile belirli bir yazar tarafından yazılmış ansible-galaxy şablonu aratılabilir.
 - dummy altında oluşturulan dosya/klasörlerin açıklamalarına (https://danuka-praneeth.medium.com/ansible-roles-and-ansible-galaxy-b224f4693cd4) erişilebilir.
 - dummy/docker/defaults # varsayılanı example.com olan fakat her birim için farklı alan adları için 
 - dummy/docker/vars # ubuntu distrosu için release adı. Çoğunlukla overrite edilmeyen değişkenler 
